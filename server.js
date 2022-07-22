@@ -9,7 +9,7 @@ app.use(express.json());
 const url = process.env.MONGOOSE_URL;
 
 mongoose.connect(url).then(() => {
-  console.log('Connected to DB', url);
+  console.log('Connected to DB');
 });
 
 app.get('/', (req, res) => {

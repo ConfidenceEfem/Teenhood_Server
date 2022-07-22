@@ -36,7 +36,6 @@ const CreateQuestion = async (req, res) => {
 
       createUser.questions.push(questionItem);
       createUser.save();
-      console.log('hello');
 
       res
         .status(201)
