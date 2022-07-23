@@ -6,6 +6,7 @@ const port = process.env.PORT;
 const router = require('./router/Router');
 const app = express();
 app.use(express.json());
+
 app.use(cors());
 
 const url = process.env.MONGOOSE_URL;
