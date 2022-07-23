@@ -102,8 +102,31 @@ const getAllQuestion = async (req, res) => {
   }
 };
 
+const getOneUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const findOneUser = await UserModel.findById(id);
+    res.status(201).json({ message: 'One user', data: findOneUser });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+const DeleteOneQuestion = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const oneDeleted = await QuestionModel.findByIdAndDelete(id);
+    res.status(201).json({ message: 'One Question Deleted', data: oneDeleted });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 module.exports = {
   CreateQuestion,
   getAllUser,
   getAllQuestion,
+  getOneUser,
+  DeleteOneQuestion,
 };
