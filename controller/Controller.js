@@ -1,7 +1,29 @@
 const mongoose = require('mongoose');
-
+require('dotenv').config();
 const QuestionModel = require('../models/QuestionModel');
 const UserModel = require('../models/UserModel');
+const jwt = require('jsonwebtoken');
+
+// const checkAuth = async (req, res, next) => {
+//   try {
+//     const authToken = req.headers.authorization;
+//     const token = authToken.split(' ')[1];
+//     const verify = jwt.verify(
+//       token,
+//       process.env.JSON_SECRET,
+//       (error, payload) => {
+//         if (error) {
+//           res.status(400).json({ message: 'Invalid TOKEN' });
+//         } else {
+//           req.user = payload;
+//           next();
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     res.status(404).json({ message: error.message });
+//   }
+// };
 
 const CreateQuestion = async (req, res) => {
   try {
@@ -11,21 +33,32 @@ const CreateQuestion = async (req, res) => {
     });
 
     if (findUser) {
-      //   console.log('hello');
-      const questionItem = new QuestionModel({
-        question: question,
-      });
-      questionItem.user = findUser;
-      questionItem.save();
+      if (req.headers.authorization) {
+        const questionItem = new QuestionModel({
+          question: question,
+        });
+        questionItem.user = findUser;
+        questionItem.save();
 
-      findUser.questions.push(questionItem);
-      findUser.save();
+        findUser.questions.push(questionItem);
+        findUser.save();
 
-      res
-        .status(201)
-        .json({ message: 'Question Asked Success', data: questionItem });
+        res
+          .status(201)
+          .json({ message: 'Question Asked Success', data: questionItem });
+      } else {
+        res.status(404).json({ message: 'Please use another name' });
+      }
     } else {
       const createUser = await UserModel.create({ name });
+
+      const token = jwt.sign(
+        {
+          name: name,
+        },
+        process.env.JSON_SECRET,
+        { expiresIn: '1d' }
+      );
 
       const questionItem = new QuestionModel({
         question: question,
@@ -37,9 +70,10 @@ const CreateQuestion = async (req, res) => {
       createUser.questions.push(questionItem);
       createUser.save();
 
-      res
-        .status(201)
-        .json({ message: 'Question Asked Success', data: questionItem });
+      res.status(201).json({
+        message: 'User Registered Successfully',
+        data: { data: createUser, token },
+      });
     }
   } catch (error) {
     res.status(404).json({ message: error.message });

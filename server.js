@@ -6,7 +6,7 @@ const router = require('./router/Router');
 const app = express();
 app.use(express.json());
 
-const url = process.env.MONGOOSE_URL;
+const url = process.env.MONGOOSE_URL1;
 
 mongoose.connect(url).then(() => {
   console.log('Connected to DB');
