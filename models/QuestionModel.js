@@ -6,6 +6,11 @@ const QuestionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    toggle: {
+      default: false,
+      type: Boolean,
+      required: true,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',

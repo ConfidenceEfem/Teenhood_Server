@@ -123,10 +123,35 @@ const DeleteOneQuestion = async (req, res) => {
   }
 };
 
+const EditUserQuestion = async (req, res)=> {
+  try {
+    const {question} = req.body
+    const id = req.params.id
+    const UpdateQuestion = await QuestionModel.findByIdAndUpdate(id, {question}, {new: true})
+    res.status(201).json({message: "Question Updated Successfully", data: UpdateQuestion})
+
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+}
+const updateToggle = async (req, res)=> {
+  try {
+    const {toggle} = req.body
+    const id = req.params.id
+    const UpdateQuestion = await QuestionModel.findByIdAndUpdate(id, {toggle}, {new: true})
+    res.status(201).json({message: "Question Updated Successfully", data: UpdateQuestion})
+
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+}
+
 module.exports = {
   CreateQuestion,
   getAllUser,
   getAllQuestion,
   getOneUser,
   DeleteOneQuestion,
+  EditUserQuestion,
+  updateToggle
 };
